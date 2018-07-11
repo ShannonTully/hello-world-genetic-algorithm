@@ -4,11 +4,11 @@ import hello_world as h
 
 
 def test_perfect_fitness():
-    assert h.fitness('Hello World!') == 'Done!'
+    assert h.fitness('Hello World!', 'Hello World!') == 'Done!'
 
 
 def test_not_fitness_match():
-    assert h.fitness('Hello World') == 10
+    assert h.fitness('Hello World', 'Hello World!') == 10
 
 
 def test_first_gen_length():
@@ -24,45 +24,45 @@ def test_first_gen_randomness():
 
 def test_fitness_calculation_length():
     test_pop = h.first_gen()
-    test = h.calculate_fitness_of_population(test_pop)
+    test = h.calculate_fitness_of_population(test_pop, 'Hello World!')
     assert len(test) == 100
 
 
 def test_fitness_calculation_changes_format():
     test_pop = h.first_gen()
-    test = h.calculate_fitness_of_population(test_pop)
+    test = h.calculate_fitness_of_population(test_pop, 'Hello World!')
     for i in test:
         assert len(i) == 2
 
 
 def test_fitness_calculation_is_accurate():
     test_pop = h.first_gen()
-    test = h.calculate_fitness_of_population(test_pop)
+    test = h.calculate_fitness_of_population(test_pop, 'Hello World!')
     for i in test:
-        assert i[1] == h.fitness(i[0])
+        assert i[1] == h.fitness(i[0], 'Hello World!')
 
 
 def test_parent_length():
-    test_pop = h.calculate_fitness_of_population(h.first_gen())
-    test = h.new_breeders(test_pop)
+    test_pop = h.calculate_fitness_of_population(h.first_gen(), 'Hello World!')
+    test = h.new_breeders(test_pop)[0]
     assert len(test) == 50
 
 
 def test_parents_are_good():
-    test_pop = h.calculate_fitness_of_population(h.first_gen())
-    test = h.new_breeders(test_pop)
+    test_pop = h.calculate_fitness_of_population(h.first_gen(), 'Hello World!')
+    test = h.new_breeders(test_pop)[0]
     for i in range(24):
-        assert h.fitness(test[i][0]) >= h.fitness(test[i + 1][0])
+        assert h.fitness(test[i][0], 'Hello World!') >= h.fitness(test[i + 1][0], 'Hello World!')
 
 
 def test_breed_length():
-    test_pop = h.new_breeders(h.calculate_fitness_of_population(h.first_gen()))
+    test_pop = h.new_breeders(h.calculate_fitness_of_population(h.first_gen(), 'Hello World!'))[0]
     test = h.breed(test_pop)
     assert len(test) == 100
 
 
 def test_proper_breeding():
-    test_pop = h.new_breeders(h.calculate_fitness_of_population(h.first_gen()))[:2]
+    test_pop = h.new_breeders(h.calculate_fitness_of_population(h.first_gen(), 'Hello World!'))[0][:2]
     parent1, parent2 = test_pop
     test = h.breed(test_pop)
     for child in test:
@@ -70,29 +70,29 @@ def test_proper_breeding():
             assert child[i] == parent1[0][i] or child[i] == parent2[0][i]
 
 
-def test_basic_quicksort():
+def test_basic_sort():
     unsorted = [['a', 2], ['a', 1]]
-    assert h.quicksort(unsorted) == [['a', 1], ['a', 2]]
+    assert h.sort(unsorted) == [['a', 1], ['a', 2]]
 
 
 def test_one_element():
     unsorted = [['a', 1]]
-    assert h.quicksort(unsorted) == [['a', 1]]
+    assert h.sort(unsorted) == [['a', 1]]
 
 
-def test_less_basic_quicksort():
+def test_less_basic_sort():
     unsorted = [['a', 2], ['a', 4], ['a', 3], ['a', 1]]
-    assert h.quicksort(unsorted) == [['a', 1], ['a', 2], ['a', 3], ['a', 4]]
+    assert h.sort(unsorted) == [['a', 1], ['a', 2], ['a', 3], ['a', 4]]
 
 
-def test_reversed_quicksort():
+def test_reversed_sort():
     unsorted = [['a', 10], ['a', 9], ['a', 8], ['a', 7], ['a', 6], ['a', 5], ['a', 4], ['a', 3], ['a', 2], ['a', 1]]
-    assert h.quicksort(unsorted) == [['a', 1], ['a', 2], ['a', 3], ['a', 4], ['a', 5], ['a', 6], ['a', 7], ['a', 8], ['a', 9], ['a', 10]]
+    assert h.sort(unsorted) == [['a', 1], ['a', 2], ['a', 3], ['a', 4], ['a', 5], ['a', 6], ['a', 7], ['a', 8], ['a', 9], ['a', 10]]
 
 
-def test_complex_quicksort():
+def test_complex_sort():
     unsorted = [['a', 49], ['a', 682], ['a', -9000], ['a', 62], ['a', 8473], ['a', -47], ['a', 1]]
-    assert h.quicksort(unsorted) == [['a', -9000], ['a', -47], ['a', 1], ['a', 49], ['a', 62], ['a', 682], ['a', 8473]]
+    assert h.sort(unsorted) == [['a', -9000], ['a', -47], ['a', 1], ['a', 49], ['a', 62], ['a', 682], ['a', 8473]]
 
 
 def test_mutate_changes():
@@ -106,8 +106,8 @@ def test_mutate_length():
     test_pop = h.first_gen()
     for individual in test_pop:
         new = h.mutate(individual)
-        assert len(new) - 1 == len(individual) or len(new) + 1 == len(individual) or len(new) == len(individual)
+        assert len(new) - 1 == len(individual) or len(new) + 1 == len(individual) or len(new) == len(individual) or len(new) - 2 == len(individual)
 
 
 def test_main():
-    assert h.main() == True
+    assert type(h.main('Hello World!')) == int
